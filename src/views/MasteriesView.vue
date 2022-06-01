@@ -1,14 +1,14 @@
 <template>
-  <div class="about">
+  <div class="masteries">
     <div class="container">
-      <h1 class="h1 text-center">About</h1>
+      <h1 class="h1 text-center">Champions Masteries</h1>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "AboutView",
+  name: "MasteriesView",
 };
 </script>
 
