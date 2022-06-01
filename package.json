@@ -1,6 +1,21 @@
 {
   "name": "otp-project-vue3",
   "version": "0.1.0",
+  "description": "League of Legends players statistics website.",
+  "author": "SmashScharrer",
+  "license": "MIT",
+  "homepage": "https://github.com/smashscharrer/otp-project-vue3#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smashscharrer/otp-project-vue3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smashscharrer/otp-project-vue3/issues"
+  },
+  "engines": {
+    "npm": ">=8.5.5",
+    "node": ">=16.15.0"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
