@@ -7,25 +7,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <div
-            v-for="champion in listChampions.data"
-            :key="champion.key"
-            class="card mb-3 mx-auto"
-            style="width: 18rem"
-          >
-            <img
-              :src="getChampionAsset(champion.name)"
-              class="card-img-top"
-              alt="Logo champion Lol"
-            />
-            <div class="card-body">
-              <h5 class="card-title text-center">{{ champion.name }}</h5>
-              <p class="card-text text-center fst-italic">
-                {{ champion.title }}
-              </p>
-            </div>
-          </div>
+        <div
+          v-for="champion in listChampions"
+          v-bind:key="champion.key"
+          class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12"
+        >
+          <CardChampionMastery
+            :asset="getChampionAsset(champion.name)"
+            :name="champion.name"
+            :title="champion.title"
+          />
         </div>
       </div>
     </div>
@@ -35,13 +26,16 @@
 <script>
 import axios from "axios";
 
-// axios.defaults.baseURL = "https://euw1.api.riotgames.com";
+import CardChampionMastery from "@/components/CardChampionMastery";
 
 export default {
   name: "MasteriesView",
+  components: {
+    CardChampionMastery,
+  },
   data() {
     return {
-      listChampions: [],
+      listChampions: {},
       listChampionsMasteries: {},
     };
   },
@@ -148,7 +142,7 @@ export default {
           "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json"
         )
         .then((response) => {
-          this.listChampions = response.data;
+          this.listChampions = response.data.data;
         });
     },
   },
