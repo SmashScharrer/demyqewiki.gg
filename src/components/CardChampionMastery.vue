@@ -7,11 +7,12 @@
         alt="League of Legends champions"
       />
       <div class="card-body">
-        <h5 class="card-title text-center">{{ this.name }}</h5>
+        <h5 class="card-title text-center">{{ this.id }}</h5>
         <p class="card-text text-center fst-italic">
-          {{ this.title }}
+          {{ this.points }}
         </p>
       </div>
+      <div class="card-footer text-center">Masteries {{ this.level }}</div>
     </div>
   </div>
 </template>
@@ -20,9 +21,10 @@
 export default {
   name: "CardChampionMastery",
   props: {
+    id: Number,
+    points: Number,
+    level: Number,
     asset: String,
-    name: String,
-    title: String,
   },
 };
 </script>
