@@ -16,6 +16,8 @@
             :id="item.championId"
             :points="item.championPoints"
             :level="item.championLevel"
+            :tokensEarned="item.tokensEarned"
+            :isChestGranted="item.chestGranted"
           />
         </div>
       </div>
