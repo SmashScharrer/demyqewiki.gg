@@ -16,7 +16,6 @@
             :id="item.championId"
             :points="item.championPoints"
             :level="item.championLevel"
-            asset="http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/Sett.png"
           />
         </div>
       </div>
@@ -26,7 +25,6 @@
 
 <script>
 import axios from "axios";
-// import _ from "lodash";
 
 import CardChampionMastery from "@/components/CardChampionMastery";
 
@@ -39,21 +37,11 @@ export default {
     return {
       summonerId: "ayfPQxxzVKaOEqivKe8B9c7UqeLvdGfBSysYTdQ8VBgxCWKn",
       apiKey: "RGAPI-6082214f-5a9e-4dc9-a596-4f9fdef2eec5",
-      listChampions: {},
+      listChampions: [],
       listChampionsMasteries: {},
     };
   },
   methods: {
-    async getChampions() {
-      await axios
-        .get(
-          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json"
-        )
-        .then((response) => {
-          this.listChampions = response.data.data;
-          // console.log(this.listChampions);
-        });
-    },
     async getChampionsMasteries() {
       await axios({
         method: "get",
@@ -73,7 +61,6 @@ export default {
     getChampionAsset() {},
   },
   mounted() {
-    this.getChampions();
     this.getChampionsMasteries();
   },
 };
