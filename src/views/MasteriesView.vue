@@ -58,7 +58,9 @@ export default {
           console.log("Error : " + error);
         });
     },
-    getChampionAsset() {},
+    getChampionAsset(noChampion) {
+      console.log(noChampion);
+    },
   },
   mounted() {
     this.getChampionsMasteries();
