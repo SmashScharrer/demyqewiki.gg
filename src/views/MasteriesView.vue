@@ -46,7 +46,11 @@ export default {
     async getChampions() {
       await axios
         .get(
-          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json"
+          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json",
+          {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          }
         )
         .then((response) => {
           Object.entries(response.data.data).forEach((value) => {
@@ -55,15 +59,28 @@ export default {
               name: value[1].name,
             });
           });
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log("Error request hedars : " + error.response.headers);
+          } else if (error.request) {
+            console.log("Error request : " + error.request);
+          } else {
+            console.log("Error : " + error.message);
+          }
         });
     },
     async getChampionsMasteries() {
       await axios
         .get(
           "https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" +
-            process.env.VUE_APP_SUMMONER +
+            process.env.VUE_APP_SUMMONER_ID +
             "?api_key=" +
-            process.env.VUE_APP_API_KEY
+            process.env.VUE_APP_API_KEY,
+          {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          }
         )
         .then((response) => {
           Object.entries(response.data).forEach((value) => {
@@ -78,11 +95,19 @@ export default {
               tokensEarned: value[1].tokensEarned,
             });
           });
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log("Error request hedars : " + error.response.headers);
+          } else if (error.request) {
+            console.log("Error request : " + error.request);
+          } else {
+            console.log("Error : " + error.message);
+          }
         });
     },
   },
   mounted() {
-    this.getChampions();
     this.getChampionsMasteries();
   },
 };
