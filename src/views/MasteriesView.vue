@@ -15,6 +15,7 @@
           <CardChampionMastery
             :idChampion="item.id"
             :nameChampion="item.name"
+            :assetChampion="item.asset"
             :pointsChampion="item.points"
             :levelChampion="item.level"
             :tokensEarnedChampion="item.tokensEarned"
@@ -57,6 +58,7 @@ export default {
             this.listChampions.push({
               id: value[1].key,
               name: value[1].name,
+              asset: value[1].image.full,
             });
           });
         })
@@ -83,11 +85,23 @@ export default {
           }
         )
         .then((response) => {
+          let nameChampion = "";
+          let assetChampion = "";
+
           Object.entries(response.data).forEach((value) => {
+            this.listChampions.forEach((item) => {
+              if (parseInt(item.id) === parseInt(value[1].championId)) {
+                nameChampion = item.name;
+                assetChampion = item.asset;
+              }
+            });
+
             this.listChampionsMasteries.push({
               id: value[1].championId,
-              name: "Test",
-              asset: "",
+              name: nameChampion,
+              asset:
+                "http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/" +
+                assetChampion,
               level: value[1].championLevel,
               points: value[1].championPoints,
               chestGranted: value[1].chestGranted,
@@ -108,6 +122,7 @@ export default {
     },
   },
   mounted() {
+    this.getChampions();
     this.getChampionsMasteries();
   },
 };

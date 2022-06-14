@@ -3,7 +3,7 @@
     <div class="card mb-3 mx-auto" style="width: 12rem">
       <!-- Champion Mastery Asset -->
       <img
-        src="http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/Sett.png"
+        :src="this.assetChampion"
         class="card-img-top"
         alt="Logo Champion Asset"
       />
@@ -233,6 +233,7 @@ export default {
   props: {
     idChampion: Number,
     nameChampion: String,
+    assetChampion: String,
     pointsChampion: Number,
     levelChampion: Number,
     tokensEarnedChampion: Number,
