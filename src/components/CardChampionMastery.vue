@@ -10,10 +10,13 @@
 
       <!-- Champion Mastery Content -->
       <div class="card-body">
+        <!-- Champion Name -->
         <h5 class="card-title text-center">{{ this.nameChampion }}</h5>
-        <p class="card-text text-center fst-italic">
+        <!-- Champion Points -->
+        <p class="card-text text-center fst-italic m-2 p-0">
           {{ this.pointsChampion.toLocaleString() }}
         </p>
+        <!-- Champion Tokens Earned -->
         <div class="text-center">
           <div v-if="this.levelChampion === 7">
             <img
@@ -156,27 +159,30 @@
             </div>
           </div>
           <div v-else>
-            <div class="progress">
+            <!-- Champion Progress Bar -->
+            <div class="progress mt-3 mb-2">
               <div
-                class="progress-bar"
+                class="progress-bar bg-info progress-bar-striped"
+                :style="{ width: this.pourcentLevelChampion + '%' }"
                 role="progressbar"
-                aria-valuenow="0"
-                aria-valuemin="0"
-                aria-valuemax="100"
+                :aria-valuenow="this.pointsChampion"
+                :aria-valuemin="this.pointsMinLevelChampion"
+                :aria-valuemax="this.pointsMaxLevelChampion"
               ></div>
             </div>
           </div>
         </div>
+        <!-- Champion Chest -->
         <div class="text-center">
           <img
             v-if="this.isChestGrantedChampion"
-            class="chest"
+            class="chest mt-2 p-0"
             src="@/assets/chestMastery.png"
             alt="Logo Chest"
           />
           <img
             v-else
-            class="chest chestNotEarned"
+            class="chest chestNotEarned mt-2 p-0"
             src="@/assets/chestMastery.png"
             alt="Logo Chest Not Earned"
           />
@@ -184,44 +190,54 @@
       </div>
 
       <!-- Champion Mastery Level -->
-      <div
-        v-if="this.levelChampion === 7"
-        class="card-footer text-center background-blue"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-if="this.levelChampion === 7">
+        <div class="card-footer background-blue">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div
-        v-else-if="this.levelChampion === 6"
-        class="card-footer text-center background-pink"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-else-if="this.levelChampion === 6">
+        <div class="card-footer background-pink">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div
-        v-else-if="this.levelChampion === 5"
-        class="card-footer text-center background-red"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-else-if="this.levelChampion === 5">
+        <div class="card-footer background-red">
+          <p class="text-center m-0 p-0 fw-bold text-white">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div
-        v-else-if="this.levelChampion === 4"
-        class="card-footer text-center background-orange"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-else-if="this.levelChampion === 4">
+        <div class="card-footer background-orange">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div
-        v-else-if="this.levelChampion === 3"
-        class="card-footer text-center background-gold"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-else-if="this.levelChampion === 3">
+        <div class="card-footer background-gold">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div
-        v-else-if="this.levelChampion === 2"
-        class="card-footer text-center background-yellow"
-      >
-        Masteries {{ this.levelChampion }}
+      <div v-else-if="this.levelChampion === 2">
+        <div class="card-footer background-yellow">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
-      <div v-else class="card-footer text-center">
-        Masteries {{ this.levelChampion }}
+      <div v-else>
+        <div class="card-footer">
+          <p class="text-center m-0 p-0 fw-bold">
+            Masteries {{ this.levelChampion }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -235,6 +251,9 @@ export default {
     nameChampion: String,
     assetChampion: String,
     pointsChampion: Number,
+    pointsMinLevelChampion: Number,
+    pointsMaxLevelChampion: Number,
+    pourcentLevelChampion: Number,
     levelChampion: Number,
     tokensEarnedChampion: Number,
     isChestGrantedChampion: Boolean,
@@ -250,7 +269,7 @@ export default {
   filter: brightness(1%) opacity(15%);
 }
 .chest {
-  height: 38px;
+  height: 42px;
 }
 .chestNotEarned {
   filter: brightness(1%) opacity(15%);

@@ -17,6 +17,9 @@
             :nameChampion="item.name"
             :assetChampion="item.asset"
             :pointsChampion="item.points"
+            :pointsMinLevelChampion="item.pointsMinLevel"
+            :pointsMaxLevelChampion="item.pointsMaxLevel"
+            :pourcentLevelChampion="item.pourcentLevel"
             :levelChampion="item.level"
             :tokensEarnedChampion="item.tokensEarned"
             :isChestGrantedChampion="item.chestGranted"
@@ -104,6 +107,16 @@ export default {
                 assetChampion,
               level: value[1].championLevel,
               points: value[1].championPoints,
+              pointsMinLevel:
+                parseInt(value[1].championPoints, 10) -
+                parseInt(value[1].championPointsSinceNextLevel, 10),
+              pointsMaxLevel:
+                parseInt(value[1].championPoints, 10) +
+                parseInt(value[1].championPointsUntilNextLevel, 10),
+              pourcentLevel:
+                (parseInt(value[1].championPoints) * 100) /
+                (parseInt(value[1].championPoints, 10) +
+                  parseInt(value[1].championPointsUntilNextLevel, 10)),
               chestGranted: value[1].chestGranted,
               lastPlayTime: value[1].lastPlayTime,
               tokensEarned: value[1].tokensEarned,
