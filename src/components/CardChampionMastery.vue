@@ -3,7 +3,7 @@
     <div class="card mb-3 mx-auto" style="width: 12rem">
       <!-- Champion Mastery Asset -->
       <img
-        :src="this.linkAsset + this.assetChampion"
+        :src="this.assetChampion"
         class="card-img-top"
         alt="Logo Champion Asset"
       />
@@ -12,10 +12,10 @@
       <div class="card-body">
         <h5 class="card-title text-center">{{ this.nameChampion }}</h5>
         <p class="card-text text-center fst-italic">
-          {{ this.points.toLocaleString() }}
+          {{ this.pointsChampion.toLocaleString() }}
         </p>
         <div class="text-center">
-          <div v-if="this.level === 7">
+          <div v-if="this.levelChampion === 7">
             <img
               class="token"
               src="@/assets/tokenMastery.png"
@@ -32,8 +32,8 @@
               alt="Logo Mastery"
             />
           </div>
-          <div v-else-if="this.level === 6">
-            <div v-if="this.tokensEarned === 0">
+          <div v-else-if="this.levelChampion === 6">
+            <div v-if="this.tokensEarnedChampion === 0">
               <img
                 class="token tokenNotEarned"
                 src="@/assets/tokenMastery.png"
@@ -50,7 +50,7 @@
                 alt="Logo Mastery"
               />
             </div>
-            <div v-else-if="this.tokensEarned === 1">
+            <div v-else-if="this.tokensEarnedChampion === 1">
               <img
                 class="token"
                 src="@/assets/tokenMastery.png"
@@ -67,7 +67,7 @@
                 alt="Logo Mastery"
               />
             </div>
-            <div v-else-if="this.tokensEarned === 2">
+            <div v-else-if="this.tokensEarnedChampion === 2">
               <img
                 class="token"
                 src="@/assets/tokenMastery.png"
@@ -84,7 +84,7 @@
                 alt="Logo Mastery"
               />
             </div>
-            <div v-else-if="this.tokensEarned === 3">
+            <div v-else-if="this.tokensEarnedChampion === 3">
               <img
                 class="token"
                 src="@/assets/tokenMastery.png"
@@ -102,8 +102,8 @@
               />
             </div>
           </div>
-          <div v-else-if="this.level === 5">
-            <div v-if="this.tokensEarned === 0">
+          <div v-else-if="this.levelChampion === 5">
+            <div v-if="this.tokensEarnedChampion === 0">
               <img
                 class="token tokenNotEarned"
                 src="@/assets/tokenMastery.png"
@@ -120,7 +120,7 @@
                 alt="Logo Mastery"
               />
             </div>
-            <div v-else-if="this.tokensEarned === 1">
+            <div v-else-if="this.tokensEarnedChampion === 1">
               <img
                 class="token"
                 src="@/assets/tokenMastery.png"
@@ -137,7 +137,7 @@
                 alt="Logo Mastery"
               />
             </div>
-            <div v-else-if="this.tokensEarned === 2">
+            <div v-else-if="this.tokensEarnedChampion === 2">
               <img
                 class="token"
                 src="@/assets/tokenMastery.png"
@@ -169,7 +169,7 @@
         </div>
         <div class="text-center">
           <img
-            v-if="this.isChestGranted"
+            v-if="this.isChestGrantedChampion"
             class="chest"
             src="@/assets/chestMastery.png"
             alt="Logo Chest"
@@ -185,88 +185,59 @@
 
       <!-- Champion Mastery Level -->
       <div
-        v-if="this.level === 7"
+        v-if="this.levelChampion === 7"
         class="card-footer text-center background-blue"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div
-        v-else-if="this.level === 6"
+        v-else-if="this.levelChampion === 6"
         class="card-footer text-center background-pink"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div
-        v-else-if="this.level === 5"
+        v-else-if="this.levelChampion === 5"
         class="card-footer text-center background-red"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div
-        v-else-if="this.level === 4"
+        v-else-if="this.levelChampion === 4"
         class="card-footer text-center background-orange"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div
-        v-else-if="this.level === 3"
+        v-else-if="this.levelChampion === 3"
         class="card-footer text-center background-gold"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div
-        v-else-if="this.level === 2"
+        v-else-if="this.levelChampion === 2"
         class="card-footer text-center background-yellow"
       >
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
       <div v-else class="card-footer text-center">
-        Masteries {{ this.level }}
+        Masteries {{ this.levelChampion }}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "CardChampionMastery",
-  data() {
-    return {
-      linkAsset: "http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/",
-      nameChampion: "",
-      assetChampion: "",
-    };
-  },
-
   props: {
-    id: Number,
-    points: Number,
-    level: Number,
-    tokensEarned: Number,
-    isChestGranted: Boolean,
-  },
-
-  methods: {
-    async getChampions() {
-      await axios
-        .get(
-          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json"
-        )
-        .then((response) => {
-          Object.entries(response.data.data).forEach(([cle, valeur]) => {
-            if (parseInt(valeur.key, 10) === parseInt(this.id, 10)) {
-              this.nameChampion = cle;
-              this.assetChampion = valeur.image.full;
-            }
-          });
-        });
-    },
-  },
-
-  mounted() {
-    this.getChampions();
+    idChampion: Number,
+    nameChampion: String,
+    assetChampion: String,
+    pointsChampion: Number,
+    levelChampion: Number,
+    tokensEarnedChampion: Number,
+    isChestGrantedChampion: Boolean,
   },
 };
 </script>

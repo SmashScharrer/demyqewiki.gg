@@ -13,11 +13,13 @@
           class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12"
         >
           <CardChampionMastery
-            :id="item.championId"
-            :points="item.championPoints"
-            :level="item.championLevel"
-            :tokensEarned="item.tokensEarned"
-            :isChestGranted="item.chestGranted"
+            :idChampion="item.id"
+            :nameChampion="item.name"
+            :assetChampion="item.asset"
+            :pointsChampion="item.points"
+            :levelChampion="item.level"
+            :tokensEarnedChampion="item.tokensEarned"
+            :isChestGrantedChampion="item.chestGranted"
           />
         </div>
       </div>
@@ -37,34 +39,90 @@ export default {
   },
   data() {
     return {
-      summonerId: "ayfPQxxzVKaOEqivKe8B9c7UqeLvdGfBSysYTdQ8VBgxCWKn",
-      apiKey: "RGAPI-6082214f-5a9e-4dc9-a596-4f9fdef2eec5",
       listChampions: [],
-      listChampionsMasteries: {},
+      listChampionsMasteries: [],
     };
   },
   methods: {
-    async getChampionsMasteries() {
-      await axios({
-        method: "get",
-        url:
-          "https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" +
-          this.summonerId +
-          "?api_key=" +
-          this.apiKey,
-      })
+    async getChampions() {
+      await axios
+        .get(
+          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json",
+          {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          }
+        )
         .then((response) => {
-          this.listChampionsMasteries = response.data;
+          Object.entries(response.data.data).forEach((value) => {
+            this.listChampions.push({
+              id: value[1].key,
+              name: value[1].name,
+              asset: value[1].image.full,
+            });
+          });
         })
         .catch((error) => {
-          console.log("Error : " + error);
+          if (error.response) {
+            console.log("Error request hedars : " + error.response.headers);
+          } else if (error.request) {
+            console.log("Error request : " + error.request);
+          } else {
+            console.log("Error : " + error.message);
+          }
         });
     },
-    getChampionAsset(noChampion) {
-      console.log(noChampion);
+    async getChampionsMasteries() {
+      await axios
+        .get(
+          "https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" +
+            process.env.VUE_APP_SUMMONER_ID +
+            "?api_key=" +
+            process.env.VUE_APP_API_KEY,
+          {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          }
+        )
+        .then((response) => {
+          let nameChampion = "";
+          let assetChampion = "";
+
+          Object.entries(response.data).forEach((value) => {
+            this.listChampions.forEach((item) => {
+              if (parseInt(item.id) === parseInt(value[1].championId)) {
+                nameChampion = item.name;
+                assetChampion = item.asset;
+              }
+            });
+
+            this.listChampionsMasteries.push({
+              id: value[1].championId,
+              name: nameChampion,
+              asset:
+                "http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/" +
+                assetChampion,
+              level: value[1].championLevel,
+              points: value[1].championPoints,
+              chestGranted: value[1].chestGranted,
+              lastPlayTime: value[1].lastPlayTime,
+              tokensEarned: value[1].tokensEarned,
+            });
+          });
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log("Error request hedars : " + error.response.headers);
+          } else if (error.request) {
+            console.log("Error request : " + error.request);
+          } else {
+            console.log("Error : " + error.message);
+          }
+        });
     },
   },
   mounted() {
+    this.getChampions();
     this.getChampionsMasteries();
   },
 };
