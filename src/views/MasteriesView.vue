@@ -50,7 +50,7 @@ export default {
     async getChampions() {
       await axios
         .get(
-          "http://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json",
+          "https://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json",
           {
             "Content-Type": "application/json;charset=UTF-8",
             "Access-Control-Allow-Origin": "*",
