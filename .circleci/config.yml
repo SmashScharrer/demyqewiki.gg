@@ -1,34 +1,31 @@
 version: 2.1
 orbs:
+  node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
 
 jobs:
-  install-lint-deploy:
+  build:
     docker:
       - image: cimg/node:18.3.0
     steps:
       - checkout
+      - run: node --version
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install packages
-          command: npm i
-      - run:
-          name: Run linter
-          command: npx vue-cli-service lint
-  deploy:
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/install
-      - run:
-          command: echo "The command above installs Heroku, the command below deploys. What you do inbetween is up to you!"
-      - heroku/deploy-via-git
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
 workflows:
-  deployment-workflow:
+  heroku_deploy:
     jobs:
-      - install-lint-deploy
-      - deploy:
+      - build
+      - heroku/deploy-via-git:
           requires:
-            - install-lint-deploy
+            - build
           filters:
             branches:
               only: main
