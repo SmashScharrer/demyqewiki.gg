@@ -22,7 +22,8 @@ jobs:
           command: npm i
           name: Install packages
   run-linter:
-    executor: node/default
+    docker:
+      - image: cimg/node:18.3.0
     steps:
       - run:
           command: npx vue-cli-service lint
