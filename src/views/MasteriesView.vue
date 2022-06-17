@@ -8,21 +8,18 @@
       </div>
       <div class="row">
         <div
-          v-for="item in listChampionsMasteries"
-          v-bind:key="item.championId"
+          v-for="item in listDataCard"
+          v-bind:key="item.key"
           class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12"
         >
           <CardChampionMastery
-            :idChampion="item.id"
-            :nameChampion="item.name"
-            :assetChampion="item.asset"
+            :id-champion="item.key"
+            :name-champion="item.name"
+            :asset-champion="item.asset"
             :pointsChampion="item.points"
-            :pointsMinLevelChampion="item.pointsMinLevel"
-            :pointsMaxLevelChampion="item.pointsMaxLevel"
-            :pourcentLevelChampion="item.pourcentLevel"
-            :levelChampion="item.level"
-            :tokensEarnedChampion="item.tokensEarned"
-            :isChestGrantedChampion="item.chestGranted"
+            :level-champion="item.level"
+            :tokens-earned-champion="item.tokensEarned"
+            :is-chest-granted-champion="item.chestGranted"
           />
         </div>
       </div>
@@ -31,9 +28,10 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import RequestsClass from "@/classes/RequestsClass";
 import CardChampionMastery from "@/components/CardChampionMastery";
+
+const request = new RequestsClass(process.env.VUE_APP_API_KEY);
 
 export default {
   name: "MasteriesView",
@@ -42,101 +40,78 @@ export default {
   },
   data() {
     return {
+      version: "",
       listChampions: [],
       listChampionsMasteries: [],
+      listDataCard: [],
     };
   },
   methods: {
-    async getChampions() {
-      await axios
-        .get(
-          "https://ddragon.leagueoflegends.com/cdn/12.10.1/data/fr_FR/champion.json",
-          {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
-          }
-        )
-        .then((response) => {
-          Object.entries(response.data.data).forEach((value) => {
-            this.listChampions.push({
-              id: value[1].key,
-              name: value[1].name,
-              asset: value[1].image.full,
-            });
-          });
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log("Error request hedars : " + error.response.headers);
-          } else if (error.request) {
-            console.log("Error request : " + error.request);
-          } else {
-            console.log("Error : " + error.message);
-          }
-        });
+    async getLatestVersion() {
+      return await request.latestVersion();
     },
-    async getChampionsMasteries() {
-      await axios
-        .get(
-          "https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" +
-            process.env.VUE_APP_SUMMONER_ID +
-            "?api_key=" +
-            process.env.VUE_APP_API_KEY,
-          {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
-          }
-        )
-        .then((response) => {
-          let nameChampion = "";
-          let assetChampion = "";
-
-          Object.entries(response.data).forEach((value) => {
-            this.listChampions.forEach((item) => {
-              if (parseInt(item.id) === parseInt(value[1].championId)) {
-                nameChampion = item.name;
-                assetChampion = item.asset;
-              }
+    async getAllChampions(pVersion) {
+      let table = [];
+      const result = await request.allChampions(pVersion);
+      Object.entries(result).forEach((champion) => {
+        table.push({
+          id: champion[1].id,
+          key: parseInt(champion[1].key),
+          name: champion[1].name,
+          asset: champion[1].image,
+        });
+      });
+      return table;
+    },
+    async getChampionsMasteries(pSummoner) {
+      let table = [];
+      const result = await request.allChampionsMasteries(pSummoner);
+      Object.entries(result).forEach((champion) => {
+        table.push({
+          key: parseInt(champion[1].championId),
+          level: champion[1].championLevel,
+          points: parseInt(champion[1].championPoints),
+          pointsSinceLastLevel: "",
+          pointsUntilNextLevel: "",
+          lastPlayTime: champion[1].lastPlayTime,
+          chestGranted: champion[1].chestGranted,
+          tokensEarned: champion[1].tokensEarned,
+        });
+      });
+      return table;
+    },
+    getCardChampionData(pTableChampions, pTableChampionsMasteries) {
+      let table = [];
+      pTableChampionsMasteries.forEach((championMasterie) => {
+        pTableChampions.forEach((champion) => {
+          if (champion.key === championMasterie.key) {
+            table.push({
+              key: champion.key,
+              id: champion.id,
+              name: champion.name,
+              asset: `https://ddragon.leagueoflegends.com/cdn/${this.version}/img/champion/${champion.id}.png`,
+              level: championMasterie.level,
+              points: championMasterie.points,
+              lastPlay: championMasterie.lastPlayTime,
+              chestGranted: championMasterie.chestGranted,
+              tokensEarned: championMasterie.tokensEarned,
             });
-
-            this.listChampionsMasteries.push({
-              id: value[1].championId,
-              name: nameChampion,
-              asset:
-                "http://ddragon.leagueoflegends.com/cdn/12.10.1/img/champion/" +
-                assetChampion,
-              level: value[1].championLevel,
-              points: value[1].championPoints,
-              pointsMinLevel:
-                parseInt(value[1].championPoints, 10) -
-                parseInt(value[1].championPointsSinceNextLevel, 10),
-              pointsMaxLevel:
-                parseInt(value[1].championPoints, 10) +
-                parseInt(value[1].championPointsUntilNextLevel, 10),
-              pourcentLevel:
-                (parseInt(value[1].championPoints) * 100) /
-                (parseInt(value[1].championPoints, 10) +
-                  parseInt(value[1].championPointsUntilNextLevel, 10)),
-              chestGranted: value[1].chestGranted,
-              lastPlayTime: value[1].lastPlayTime,
-              tokensEarned: value[1].tokensEarned,
-            });
-          });
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log("Error request hedars : " + error.response.headers);
-          } else if (error.request) {
-            console.log("Error request : " + error.request);
-          } else {
-            console.log("Error : " + error.message);
           }
         });
+      });
+      return table;
     },
   },
-  mounted() {
-    this.getChampions();
-    this.getChampionsMasteries();
+  async mounted() {
+    this.version = await this.getLatestVersion();
+    this.listChampions = await this.getAllChampions(this.version);
+    this.listChampionsMasteries = await this.getChampionsMasteries(
+      process.env.VUE_APP_SUMMONER_ID
+    );
+    this.listDataCard = this.getCardChampionData(
+      this.listChampions,
+      this.listChampionsMasteries
+    );
   },
 };
 </script>
