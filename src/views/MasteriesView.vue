@@ -16,7 +16,10 @@
             :id-champion="item.key"
             :name-champion="item.name"
             :asset-champion="item.asset"
-            :pointsChampion="item.points"
+            :points-champion="item.points"
+            :points-min-level-champion="item.pointsLastLevel"
+            :points-max-level-champion="item.pointsNextLevel"
+            :pourcent-level-champion="item.pourcentLevel"
             :level-champion="item.level"
             :tokens-earned-champion="item.tokensEarned"
             :is-chest-granted-champion="item.chestGranted"
@@ -29,9 +32,11 @@
 
 <script>
 import RequestsClass from "@/classes/RequestsClass";
+import MathsClass from "@/classes/MathsClass";
 import CardChampionMastery from "@/components/CardChampionMastery";
 
 const request = new RequestsClass(process.env.VUE_APP_API_KEY);
+const maths = new MathsClass();
 
 export default {
   name: "MasteriesView",
@@ -70,9 +75,19 @@ export default {
         table.push({
           key: parseInt(champion[1].championId),
           level: champion[1].championLevel,
-          points: parseInt(champion[1].championPoints),
-          pointsSinceLastLevel: "",
-          pointsUntilNextLevel: "",
+          points: champion[1].championPoints,
+          pointsSinceLastLevel: maths.calcMinPoints(
+            champion[1].championPoints,
+            champion[1].championPointsSinceNextLevel
+          ),
+          pointsUntilNextLevel: maths.calcMaxPoints(
+            champion[1].championPoints,
+            champion[1].championPointsUntilNextLevel
+          ),
+          pourcentLevel: maths.calcPourcentLevel(
+            champion[1].championPoints,
+            champion[1].championPointsUntilNextLevel
+          ),
           lastPlayTime: champion[1].lastPlayTime,
           chestGranted: champion[1].chestGranted,
           tokensEarned: champion[1].tokensEarned,
@@ -92,6 +107,9 @@ export default {
               asset: `https://ddragon.leagueoflegends.com/cdn/${this.version}/img/champion/${champion.id}.png`,
               level: championMasterie.level,
               points: championMasterie.points,
+              pointsLastLevel: championMasterie.pointsSinceLastLevel,
+              pointsNextLevel: championMasterie.pointsUntilNextLevel,
+              pourcentLevel: championMasterie.pourcentLevel,
               lastPlay: championMasterie.lastPlayTime,
               chestGranted: championMasterie.chestGranted,
               tokensEarned: championMasterie.tokensEarned,
