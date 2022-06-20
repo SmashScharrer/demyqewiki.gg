@@ -8,7 +8,7 @@
       </div>
       <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-          <CardMatchData />
+          <MacthDataComponent />
         </div>
       </div>
     </div>
@@ -17,14 +17,14 @@
 
 <script>
 import RequestsClass from "@/classes/RequestsClass";
-import CardMatchData from "@/components/CardMatchData";
+import MacthDataComponent from "@/components/MacthDataComponent";
 
 const request = new RequestsClass(process.env.VUE_APP_API_KEY);
 
 export default {
   name: "HistoryView",
   components: {
-    CardMatchData,
+    MacthDataComponent,
   },
   data() {
     return {
