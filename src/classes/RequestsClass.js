@@ -35,4 +35,29 @@ export default class RequestsClass {
     );
     return request.data;
   }
+
+  async summonerAccount() {
+    const request = await axios.get(
+      this.hostAPI +
+        `/lol/summoner/v4/summoners/by-name/Sn0W3838?api_key=${this.apiKey}`,
+      this.config
+    );
+    return request.data;
+  }
+
+  async allMatchs(pSummonerPUUID) {
+    const request = await axios.get(
+      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${pSummonerPUUID}/ids?api_key=${this.apiKey}&start=0&count=1`,
+      this.config
+    );
+    return request.data;
+  }
+
+  async match(pMatchID) {
+    const request = await axios.get(
+      `https://europe.api.riotgames.com/lol/match/v5/matches/${pMatchID}?api_key=${this.apiKey}`,
+      this.config
+    );
+    return request.data;
+  }
 }
