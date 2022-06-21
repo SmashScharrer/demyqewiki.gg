@@ -28,24 +28,11 @@ export default {
   },
   data() {
     return {
-      summonerInfos: [],
       listMatchsID: [],
       listMatchData: [],
     };
   },
   methods: {
-    async getSummoner() {
-      let table = [];
-      const result = await request.summonerAccount();
-      table.push({
-        accountId: result.accountId,
-        puuid: result.puuid,
-        name: result.name,
-        iconId: parseInt(result.profileIconId),
-        level: result.summonerLevel,
-      });
-      return table;
-    },
     async getMachsID(pSummonerPUUID) {
       return await request.allMatchs(pSummonerPUUID);
     },
@@ -54,6 +41,7 @@ export default {
       for (const value of pTableMatchsID) {
         const result = await request.match(value);
         table.push({
+          matchType: result.info.queueId,
           info: result.info,
           metadata: result.metadata,
         });
@@ -62,8 +50,9 @@ export default {
     },
   },
   async mounted() {
-    this.summonerInfos = await this.getSummoner();
-    this.listMatchsID = await this.getMachsID(this.summonerInfos[0].puuid);
+    this.listMatchsID = await this.getMachsID(
+      process.env.VUE_APP_SUMMONER_PUUID
+    );
     this.listMatchData = await this.getMatchData(this.listMatchsID);
   },
 };

@@ -144,6 +144,7 @@ export default {
     nameItemFour: String,
     nameItemFive: String,
     nameItemSix: String,
+    gameType: String,
   },
 };
 </script>
