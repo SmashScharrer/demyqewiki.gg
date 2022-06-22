@@ -156,10 +156,12 @@ export default {
       matchDuration: "",
       matchGameVersion: "",
       matchChampionName: "",
+      matchFirstSummoner: "",
+      matchSecondSummoner: "",
     };
   },
   props: {
-    gameTypeId: Number,
+    gameQueueId: Number,
     gameStartTimestamp: Number,
     gameEndTimestamp: Number,
     gameMatchVersion: String,
@@ -169,8 +171,8 @@ export default {
     async getLatestVersion() {
       return await request.latestVersion();
     },
-    async getMatchType() {
-      return await request.matchType();
+    async getMatchType(pQueueId) {
+      return await request.matchType(pQueueId);
     },
     async getMatchDuration() {
       return maths.calcMsToTime(this.gameEndTimestamp, this.gameStartTimestamp);
@@ -192,7 +194,7 @@ export default {
   },
   async mounted() {
     this.championGameVersion = await this.getLatestVersion();
-    this.matchType = await this.getMatchType();
+    this.matchType = await this.getMatchType(this.gameQueueId);
     this.matchDuration = await this.getMatchDuration();
     this.matchGameVersion = await this.getMatchGameVersion();
     this.matchChampionName = await this.getMatchChampionName(

@@ -13,7 +13,7 @@
           class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
         >
           <MatchDataComponent
-            :game-type-id="item.matchQueueId"
+            :game-queue-id="item.matchQueueId"
             :game-start-timestamp="item.matchStartTimestamp"
             :game-end-timestamp="item.matchEndTimestamp"
             :game-match-version="item.matchGameVersion"
