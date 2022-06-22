@@ -13,9 +13,10 @@
           class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
         >
           <MatchDataComponent
-            :game-type-id="item.queueId"
-            :game-start-timestamp="item.gameStartTimestamp"
-            :game-end-timestamp="item.gameEndTimestamp"
+            :game-type-id="item.matchQueueId"
+            :game-start-timestamp="item.matchStartTimestamp"
+            :game-end-timestamp="item.matchEndTimestamp"
+            :game-match-version="item.matchGameVersion"
           />
         </div>
       </div>
@@ -50,9 +51,10 @@ export default {
         const result = await request.match(value);
         table.push({
           matchId: result.info.matchId,
-          queueId: result.info.queueId,
-          gameStartTimestamp: result.info.gameStartTimestamp,
-          gameEndTimestamp: result.info.gameEndTimestamp,
+          matchQueueId: result.info.queueId,
+          matchStartTimestamp: result.info.gameStartTimestamp,
+          matchEndTimestamp: result.info.gameEndTimestamp,
+          matchGameVersion: result.info.gameVersion,
           info: result.info,
           metadata: result.metadata,
         });

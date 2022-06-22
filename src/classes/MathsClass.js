@@ -27,13 +27,15 @@ export default class MathsClass {
     let result = parseInt(pMillisecondsEnd) - parseInt(pMillisecondsStart),
       seconds = Math.floor((result / 1000) % 60),
       minutes = Math.floor((result / (1000 * 60)) % 60);
-    // hours = Math.floor((pMilliseconds / (1000 * 60 * 60)) % 24)
 
-    // hours = hours < 10 ? "0" + hours : hours;
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    // return hours + ":" + minutes + ":" + seconds
     return minutes + ":" + seconds;
+  }
+
+  calcSplitAndSpliceGameVersion(pMatchGameVersion) {
+    let result = pMatchGameVersion.split(".");
+    return result.splice(0, 2).join(".");
   }
 }

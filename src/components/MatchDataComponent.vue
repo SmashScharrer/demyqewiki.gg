@@ -8,7 +8,7 @@
               <div class="col-12 text-start">
                 <div class="group-title mb-2">
                   <strong>{{ this.matchType }}</strong> ∙
-                  {{ this.matchDuration }} ∙ P12.11
+                  {{ this.matchDuration }} ∙ P{{ this.matchGameVersion }}
                 </div>
               </div>
             </div>
@@ -147,12 +147,14 @@ export default {
     return {
       matchType: "",
       matchDuration: "",
+      matchGameVersion: "",
     };
   },
   props: {
     gameTypeId: Number,
     gameStartTimestamp: Number,
     gameEndTimestamp: Number,
+    gameMatchVersion: String,
   },
   methods: {
     async getMatchType() {
@@ -161,13 +163,16 @@ export default {
     getMatchDuration() {
       return maths.calcMsToTime(this.gameEndTimestamp, this.gameStartTimestamp);
     },
-    async getVersion() {},
+    getMatchGameVersion() {
+      return maths.calcSplitAndSpliceGameVersion(this.gameMatchVersion);
+    },
     async getSummonerSpell() {},
     async getRune() {},
   },
   async mounted() {
     this.matchType = await this.getMatchType();
     this.matchDuration = this.getMatchDuration();
+    this.matchGameVersion = this.getMatchGameVersion();
   },
 };
 </script>
