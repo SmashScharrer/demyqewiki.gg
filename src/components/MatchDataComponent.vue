@@ -18,8 +18,14 @@
                   <div class="group-champion me-2">
                     <div class="champion">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/champion/Sett.png"
-                        alt="Sett"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.championGameVersion +
+                          '/img/champion/' +
+                          this.matchChampionName +
+                          '.png'
+                        "
+                        :alt="this.matchChampionName"
                         class="img-champion"
                       />
                     </div>
@@ -145,9 +151,11 @@ export default {
   name: "CardMatchData",
   data() {
     return {
+      championGameVersion: "",
       matchType: "",
       matchDuration: "",
       matchGameVersion: "",
+      matchChampionName: "",
     };
   },
   props: {
@@ -155,24 +163,41 @@ export default {
     gameStartTimestamp: Number,
     gameEndTimestamp: Number,
     gameMatchVersion: String,
+    gameParticipants: Array,
   },
   methods: {
+    async getLatestVersion() {
+      return await request.latestVersion();
+    },
     async getMatchType() {
       return await request.matchType();
     },
-    getMatchDuration() {
+    async getMatchDuration() {
       return maths.calcMsToTime(this.gameEndTimestamp, this.gameStartTimestamp);
     },
-    getMatchGameVersion() {
+    async getMatchGameVersion() {
       return maths.calcSplitAndSpliceGameVersion(this.gameMatchVersion);
+    },
+    async getMatchChampionName(pGameParticipants) {
+      let result = "";
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          result = value.championName;
+        }
+      }
+      return result;
     },
     async getSummonerSpell() {},
     async getRune() {},
   },
   async mounted() {
+    this.championGameVersion = await this.getLatestVersion();
     this.matchType = await this.getMatchType();
-    this.matchDuration = this.getMatchDuration();
-    this.matchGameVersion = this.getMatchGameVersion();
+    this.matchDuration = await this.getMatchDuration();
+    this.matchGameVersion = await this.getMatchGameVersion();
+    this.matchChampionName = await this.getMatchChampionName(
+      this.gameParticipants
+    );
   },
 };
 </script>

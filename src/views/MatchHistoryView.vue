@@ -17,6 +17,7 @@
             :game-start-timestamp="item.matchStartTimestamp"
             :game-end-timestamp="item.matchEndTimestamp"
             :game-match-version="item.matchGameVersion"
+            :game-participants="item.matchParticipants"
           />
         </div>
       </div>
@@ -47,14 +48,15 @@ export default {
     },
     async getMatchData(pTableMatchsID) {
       let table = [];
-      for (const value of pTableMatchsID) {
-        const result = await request.match(value);
+      for (const matchId of pTableMatchsID) {
+        const result = await request.match(matchId);
         table.push({
           matchId: result.info.matchId,
           matchQueueId: result.info.queueId,
           matchStartTimestamp: result.info.gameStartTimestamp,
           matchEndTimestamp: result.info.gameEndTimestamp,
           matchGameVersion: result.info.gameVersion,
+          matchParticipants: result.info.participants,
           info: result.info,
           metadata: result.metadata,
         });
