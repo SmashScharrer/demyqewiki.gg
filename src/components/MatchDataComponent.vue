@@ -14,13 +14,13 @@
             </div>
             <div class="row">
               <div class="col-4">
-                <div class="group-one d-flex p-2 align-items-center">
+                <div class="group-one d-flex">
                   <div class="group-champion me-2">
                     <div class="champion">
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
-                          this.championGameVersion +
+                          this.versionDDragon +
                           '/img/champion/' +
                           this.matchChampionName +
                           '.png'
@@ -33,15 +33,27 @@
                   <div class="group-summoners-spells me-2">
                     <div class="summoner-spell">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/spell/SummonerFlash.png"
-                        alt="Summoner Spell Flash"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/spell/' +
+                          this.matchFirstSummoner +
+                          '.png'
+                        "
+                        :alt="this.matchFirstSummoner"
                         class="img-summoner-spell"
                       />
                     </div>
                     <div class="summoner-spell">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/spell/SummonerHeal.png"
-                        alt="Summoner Spell Heal"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/spell/' +
+                          this.matchSecondSummoner +
+                          '.png'
+                        "
+                        :alt="this.matchSecondSummoner"
                         class="img-summoner-spell"
                       />
                     </div>
@@ -65,7 +77,7 @@
                 </div>
               </div>
               <div class="col-4 text-center">
-                <div class="group-two p-2">
+                <div class="group-two">
                   <div class="group-stats me-2">
                     <div class="stats">
                       <span class="kill fw-bold">9</span>
@@ -81,7 +93,7 @@
                 </div>
               </div>
               <div class="col-4 text-end">
-                <div class="group-three p-2">
+                <div class="group-three">
                   <div class="group-items me-2">
                     <div class="item">
                       <img
@@ -151,7 +163,7 @@ export default {
   name: "CardMatchData",
   data() {
     return {
-      championGameVersion: "",
+      versionDDragon: "",
       matchType: "",
       matchDuration: "",
       matchGameVersion: "",
@@ -174,30 +186,64 @@ export default {
     async getMatchType(pQueueId) {
       return await request.matchType(pQueueId);
     },
-    async getMatchDuration() {
-      return maths.calcMsToTime(this.gameEndTimestamp, this.gameStartTimestamp);
+    async getMatchDuration(pGameEndTimestamp, pGameStartTimestamp) {
+      return maths.calcMsToTime(pGameEndTimestamp, pGameStartTimestamp);
     },
-    async getMatchGameVersion() {
-      return maths.calcSplitAndSpliceGameVersion(this.gameMatchVersion);
+    async getMatchGameVersion(pGameMatchVersion) {
+      return maths.calcSplitAndSpliceGameVersion(pGameMatchVersion);
     },
     async getMatchChampionName(pGameParticipants) {
-      let result = "";
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
-          result = value.championName;
+          return value.championName;
         }
       }
-      return result;
     },
-    async getSummonerSpell() {},
+    async getFirstSummoner(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allSummoners(pVersionDDRagon);
+          for (let summoner of Object.entries(result)) {
+            if (value.summoner1Id === parseInt(summoner[1].key)) {
+              return summoner[0];
+            }
+          }
+        }
+      }
+    },
+    async getSecondSummoner(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allSummoners(pVersionDDRagon);
+          for (let summoner of Object.entries(result)) {
+            if (value.summoner2Id === parseInt(summoner[1].key)) {
+              return summoner[0];
+            }
+          }
+        }
+      }
+    },
     async getRune() {},
   },
   async mounted() {
-    this.championGameVersion = await this.getLatestVersion();
+    this.versionDDragon = await this.getLatestVersion();
     this.matchType = await this.getMatchType(this.gameQueueId);
-    this.matchDuration = await this.getMatchDuration();
-    this.matchGameVersion = await this.getMatchGameVersion();
+    this.matchDuration = await this.getMatchDuration(
+      this.gameEndTimestamp,
+      this.gameStartTimestamp
+    );
+    this.matchGameVersion = await this.getMatchGameVersion(
+      this.gameMatchVersion
+    );
     this.matchChampionName = await this.getMatchChampionName(
+      this.gameParticipants
+    );
+    this.matchFirstSummoner = await this.getFirstSummoner(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchSecondSummoner = await this.getSecondSummoner(
+      this.versionDDragon,
       this.gameParticipants
     );
   },
@@ -214,16 +260,16 @@ export default {
     .champion {
       .img-champion {
         border-radius: 20%;
-        width: 3rem;
-        height: 3rem;
+        width: 3.4rem;
+        height: 3.4rem;
       }
     }
   }
   .group-summoners-spells {
     .summoner-spell {
       .img-summoner-spell {
-        width: 1.2rem;
-        height: 1.2rem;
+        width: 1.1rem;
+        height: 1.1rem;
       }
     }
   }

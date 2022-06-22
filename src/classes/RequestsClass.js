@@ -72,4 +72,12 @@ export default class RequestsClass {
       }
     }
   }
+
+  async allSummoners(pVersion) {
+    const request = await axios.get(
+      this.hostDDragon + `/cdn/${pVersion}/data/fr_FR/summoner.json`,
+      this.config
+    );
+    return request.data.data;
+  }
 }
