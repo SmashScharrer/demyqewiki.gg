@@ -5,6 +5,14 @@
         <div class="card">
           <div class="card-body">
             <div class="row">
+              <div class="col-12 text-start">
+                <div class="group-title mb-2">
+                  <strong>{{ this.matchType }}</strong> ∙
+                  {{ this.matchDuration }} ∙ P12.11
+                </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-4">
                 <div class="group-one d-flex p-2 align-items-center">
                   <div class="group-champion me-2">
@@ -127,24 +135,39 @@
 </template>
 
 <script>
+import RequestsClass from "@/classes/RequestsClass";
+import MathsClass from "@/classes/MathsClass";
+
+const request = new RequestsClass(process.env.VUE_APP_API_KEY);
+const maths = new MathsClass();
+
 export default {
   name: "CardMatchData",
+  data() {
+    return {
+      matchType: "",
+      matchDuration: "",
+    };
+  },
   props: {
-    nameChampion: String,
-    nameSummonerSpellFirst: String,
-    nameSummonerSpellSecond: String,
-    nameRuneFirst: String,
-    nameRuneSecond: String,
-    nbrKill: Number,
-    nbrDeath: Number,
-    nbrAssist: Number,
-    nameItemOne: String,
-    nameItemTwo: String,
-    nameItemThree: String,
-    nameItemFour: String,
-    nameItemFive: String,
-    nameItemSix: String,
-    gameType: String,
+    gameTypeId: Number,
+    gameStartTimestamp: Number,
+    gameEndTimestamp: Number,
+  },
+  methods: {
+    async getMatchType() {
+      return await request.matchType();
+    },
+    getMatchDuration() {
+      return maths.calcMsToTime(this.gameEndTimestamp, this.gameStartTimestamp);
+    },
+    async getVersion() {},
+    async getSummonerSpell() {},
+    async getRune() {},
+  },
+  async mounted() {
+    this.matchType = await this.getMatchType();
+    this.matchDuration = this.getMatchDuration();
   },
 };
 </script>

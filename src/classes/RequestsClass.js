@@ -60,4 +60,18 @@ export default class RequestsClass {
     );
     return request.data;
   }
+
+  async matchType() {
+    let result = "";
+    const request = await axios.get(
+      `https://static.developer.riotgames.com/docs/lol/queues.json`,
+      this.config
+    );
+    for (const value of request.data) {
+      if (value.queueId === 400) {
+        result = value.description;
+      }
+    }
+    return result;
+  }
 }
