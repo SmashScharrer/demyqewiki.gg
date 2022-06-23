@@ -47,7 +47,7 @@ export default class RequestsClass {
 
   async allMatchs(pSummonerPUUID) {
     const request = await axios.get(
-      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${pSummonerPUUID}/ids?api_key=${this.apiKey}&start=0&count=1`,
+      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${pSummonerPUUID}/ids?api_key=${this.apiKey}&start=0&count=3`,
       this.config
     );
     return request.data;
@@ -87,5 +87,13 @@ export default class RequestsClass {
       this.config
     );
     return request.data;
+  }
+
+  async allItems(pVersion) {
+    const request = await axios.get(
+      this.hostDDragon + `/cdn/${pVersion}/data/fr_FR/item.json`,
+      this.config
+    );
+    return request.data.data;
   }
 }

@@ -2,7 +2,7 @@
   <div class="match-data">
     <div class="row d-flex justify-content-center">
       <div class="col-12 col-xl-10">
-        <div class="card">
+        <div class="card mb-3">
           <div class="card-body">
             <div class="row">
               <div class="col-12 text-start">
@@ -111,31 +111,25 @@
                   <div class="group-items me-2">
                     <div class="item">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/6692.png"
-                        alt="Item Serylda's Grudge"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerFirstItems[2]
+                        "
+                        :alt="this.matchPlayerFirstItems[1]"
                         class="img-item"
                       />
                     </div>
                     <div class="item">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/6694.png"
-                        alt="Item Eclipse"
-                        class="img-item"
-                      />
-                    </div>
-                  </div>
-                  <div class="group-items me-2">
-                    <div class="item">
-                      <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/3042.png"
-                        alt="Item Serylda's Grudge"
-                        class="img-item"
-                      />
-                    </div>
-                    <div class="item">
-                      <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/3009.png"
-                        alt="Item Eclipse"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerSecondItems[2]
+                        "
+                        :alt="this.matchPlayerSecondItems[1]"
                         class="img-item"
                       />
                     </div>
@@ -143,15 +137,51 @@
                   <div class="group-items me-2">
                     <div class="item">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/6676.png"
-                        alt="Item Serylda's Grudge"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerThirdItems[2]
+                        "
+                        :alt="this.matchPlayerThirdItems[1]"
                         class="img-item"
                       />
                     </div>
                     <div class="item">
                       <img
-                        src="https://ddragon.leagueoflegends.com/cdn/12.11.1/img/item/6676.png"
-                        alt="Item Serylda's Grudge"
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerFourthItems[2]
+                        "
+                        :alt="this.matchPlayerFourthItems[1]"
+                        class="img-item"
+                      />
+                    </div>
+                  </div>
+                  <div class="group-items me-2">
+                    <div class="item">
+                      <img
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerFifthItems[2]
+                        "
+                        :alt="this.matchPlayerFifthItems[1]"
+                        class="img-item"
+                      />
+                    </div>
+                    <div class="item">
+                      <img
+                        :src="
+                          'https://ddragon.leagueoflegends.com/cdn/' +
+                          this.versionDDragon +
+                          '/img/item/' +
+                          this.matchPlayerSixthItems[2]
+                        "
+                        :alt="this.matchPlayerSixthItems[1]"
                         class="img-item"
                       />
                     </div>
@@ -188,6 +218,12 @@ export default {
       matchSecondaryRune: [],
       matchPlayerScore: [],
       matchPlayerRatio: 0,
+      matchPlayerFirstItems: [],
+      matchPlayerSecondItems: [],
+      matchPlayerThirdItems: [],
+      matchPlayerFourthItems: [],
+      matchPlayerFifthItems: [],
+      matchPlayerSixthItems: [],
     };
   },
   props: {
@@ -283,6 +319,78 @@ export default {
         pPlayerScore[2]
       );
     },
+    async getMatchFirstItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item0 !== 0 && parseInt(itemData[0]) === value.item0) {
+              return [value.item0, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
+    async getMatchSecondItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item1 !== 0 && parseInt(itemData[0]) === value.item1) {
+              return [value.item1, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
+    async getMatchThirdItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item2 !== 0 && parseInt(itemData[0]) === value.item2) {
+              return [value.item2, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
+    async getMatchFourthItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item3 !== 0 && parseInt(itemData[0]) === value.item3) {
+              return [value.item3, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
+    async getMatchFifthItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item4 !== 0 && parseInt(itemData[0]) === value.item4) {
+              return [value.item4, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
+    async getMatchSixthItem(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allItems(pVersionDDRagon);
+          for (let itemData of Object.entries(result)) {
+            if (value.item5 !== 0 && parseInt(itemData[0]) === value.item5) {
+              return [value.item5, itemData[1].name, itemData[1].image.full];
+            }
+          }
+        }
+      }
+    },
   },
   async mounted() {
     this.versionDDragon = await this.getLatestVersion();
@@ -315,6 +423,30 @@ export default {
     );
     this.matchPlayerScore = await this.getPlayerScore(this.gameParticipants);
     this.matchPlayerRatio = await this.getPlayerRatio(this.matchPlayerScore);
+    this.matchPlayerFirstItems = await this.getMatchFirstItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPlayerSecondItems = await this.getMatchSecondItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPlayerThirdItems = await this.getMatchThirdItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPlayerFourthItems = await this.getMatchFourthItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPlayerFifthItems = await this.getMatchFifthItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPlayerSixthItems = await this.getMatchSixthItem(
+      this.versionDDragon,
+      this.gameParticipants
+    );
   },
 };
 </script>
