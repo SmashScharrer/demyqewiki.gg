@@ -38,4 +38,11 @@ export default class MathsClass {
     let result = pMatchGameVersion.split(".");
     return result.splice(0, 2).join(".");
   }
+
+  calcPlayerRatio(pNumberKills, pNumberDeaths, pNumberAssists) {
+    const result =
+      (parseInt(pNumberKills, 10) + parseInt(pNumberAssists, 10)) /
+      parseInt(pNumberDeaths, 10);
+    return result.toFixed(2);
+  }
 }

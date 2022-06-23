@@ -8,7 +8,8 @@
               <div class="col-12 text-start">
                 <div class="group-title mb-2">
                   <strong>{{ this.matchType }}</strong> ∙
-                  {{ this.matchDuration }} ∙ P{{ this.matchGameVersion }}
+                  {{ this.matchDuration }} ∙
+                  <em>P{{ this.matchGameVersion }}</em>
                 </div>
               </div>
             </div>
@@ -86,14 +87,21 @@
                 <div class="group-two">
                   <div class="group-stats me-2">
                     <div class="stats">
-                      <span class="kill fw-bold">9</span>
+                      <span class="kill fw-bold">{{
+                        this.matchPlayerScore[0]
+                      }}</span>
                       <span class="slash">/</span>
-                      <span class="death fw-bold text-danger">10</span>
+                      <span class="death fw-bold text-danger">{{
+                        this.matchPlayerScore[1]
+                      }}</span>
                       <span class="slash">/</span>
-                      <span class="assist fw-bold">12</span>
+                      <span class="assist fw-bold">{{
+                        this.matchPlayerScore[2]
+                      }}</span>
                     </div>
                     <div class="stats">
-                      <span class="fw-bold">2.10</span> KDA
+                      <span class="fw-bold">{{ this.matchPlayerRatio }}</span>
+                      KDA
                     </div>
                   </div>
                 </div>
@@ -178,6 +186,8 @@ export default {
       matchSecondSummoner: "",
       matchPrimaryRune: [],
       matchSecondaryRune: [],
+      matchPlayerScore: [],
+      matchPlayerRatio: 0,
     };
   },
   props: {
@@ -259,6 +269,20 @@ export default {
         }
       }
     },
+    async getPlayerScore(pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          return [value.kills, value.deaths, value.assists];
+        }
+      }
+    },
+    async getPlayerRatio(pPlayerScore) {
+      return maths.calcPlayerRatio(
+        pPlayerScore[0],
+        pPlayerScore[1],
+        pPlayerScore[2]
+      );
+    },
   },
   async mounted() {
     this.versionDDragon = await this.getLatestVersion();
@@ -289,6 +313,8 @@ export default {
       this.versionDDragon,
       this.gameParticipants
     );
+    this.matchPlayerScore = await this.getPlayerScore(this.gameParticipants);
+    this.matchPlayerRatio = await this.getPlayerRatio(this.matchPlayerScore);
   },
 };
 </script>
