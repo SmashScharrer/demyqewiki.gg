@@ -2,7 +2,10 @@
   <div class="match-data">
     <div class="row d-flex justify-content-center">
       <div class="col-12 col-xl-10">
-        <div class="card mb-3">
+        <div
+          class="card mb-3"
+          :class="this.matchPlayerIsWin ? 'is-win' : 'is-loose'"
+        >
           <div class="card-body">
             <div class="row">
               <div class="col-12 text-start">
@@ -224,6 +227,7 @@ export default {
       matchPlayerFourthItems: [],
       matchPlayerFifthItems: [],
       matchPlayerSixthItems: [],
+      matchPlayerIsWin: null,
     };
   },
   props: {
@@ -391,6 +395,13 @@ export default {
         }
       }
     },
+    async getMatchIsWin(pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          return value.win === true;
+        }
+      }
+    },
   },
   async mounted() {
     this.versionDDragon = await this.getLatestVersion();
@@ -447,15 +458,23 @@ export default {
       this.versionDDragon,
       this.gameParticipants
     );
+    this.matchPlayerIsWin = await this.getMatchIsWin(this.gameParticipants);
   },
 };
 </script>
 
 <style lang="scss" scoped>
-// 2291e8
-//background: #f08080 linear-gradient(0deg, rgba(50, 115, 250, 0.2), rgba(50, 115, 250, 0.2));
-//border: #4250d1;
-//color: white;
+.is-win {
+  background: #98c2ff
+    linear-gradient(0deg, rgba(50, 115, 250, 0.2), rgba(50, 115, 250, 0.2));
+  color: white;
+  border-color: #4250d1;
+}
+.is-loose {
+  background: #f08080
+    linear-gradient(0deg, rgba(50, 115, 250, 0.2), rgba(50, 115, 250, 0.2));
+  color: white;
+}
 .group-one {
   .group-champion {
     .champion {
