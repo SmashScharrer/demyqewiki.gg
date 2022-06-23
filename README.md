@@ -18,6 +18,8 @@
 
 ### 🏠 [Homepage](https://github.com/smashscharrer/otp-project-vue3#readme)
 
+### ✨ [Demo](https://demyqewiki.vercel.app)
+
 ## Prerequisites
 
 - npm >=8.5.5
