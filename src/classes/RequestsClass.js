@@ -80,4 +80,12 @@ export default class RequestsClass {
     );
     return request.data.data;
   }
+
+  async allRunes(pVersion) {
+    const request = await axios.get(
+      this.hostDDragon + `/cdn/${pVersion}/data/fr_FR/runesReforged.json`,
+      this.config
+    );
+    return request.data;
+  }
 }

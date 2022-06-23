@@ -61,15 +61,21 @@
                   <div class="group-runes me-2">
                     <div class="rune">
                       <img
-                        src="https://ddragon.canisback.com/img/perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png"
-                        alt="Rune Arcane Comet"
+                        :src="
+                          'https://ddragon.canisback.com/img/' +
+                          this.matchPrimaryRune[1]
+                        "
+                        :alt="this.matchPrimaryRune[0]"
                         class="img-rune"
                       />
                     </div>
                     <div class="rune">
                       <img
-                        src="https://ddragon.canisback.com/img/perk-images/Styles/7203_Whimsy.png"
-                        alt="Rune Whimsy"
+                        :src="
+                          'https://ddragon.canisback.com/img/' +
+                          this.matchSecondaryRune[1]
+                        "
+                        :alt="this.matchSecondaryRune[0]"
                         class="img-rune"
                       />
                     </div>
@@ -170,6 +176,8 @@ export default {
       matchChampionName: "",
       matchFirstSummoner: "",
       matchSecondSummoner: "",
+      matchPrimaryRune: [],
+      matchSecondaryRune: [],
     };
   },
   props: {
@@ -223,7 +231,34 @@ export default {
         }
       }
     },
-    async getRune() {},
+    async getPrimaryRune(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allRunes(pVersionDDRagon);
+          for (let runeName of Object.entries(result)) {
+            if (runeName[1].id === value.perks.styles[0].style) {
+              for (let rune of Object.entries(runeName[1].slots[0].runes)) {
+                if (rune[1].id === value.perks.styles[0].selections[0].perk) {
+                  return [rune[1].name, rune[1].icon];
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    async getSecondaryRune(pVersionDDRagon, pGameParticipants) {
+      for (const value of pGameParticipants) {
+        if (value.summonerName === "Sn0W3838") {
+          const result = await request.allRunes(pVersionDDRagon);
+          for (let runeName of Object.entries(result)) {
+            if (runeName[1].id === value.perks.styles[1].style) {
+              return [runeName[1].name, runeName[1].icon];
+            }
+          }
+        }
+      }
+    },
   },
   async mounted() {
     this.versionDDragon = await this.getLatestVersion();
@@ -243,6 +278,14 @@ export default {
       this.gameParticipants
     );
     this.matchSecondSummoner = await this.getSecondSummoner(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchPrimaryRune = await this.getPrimaryRune(
+      this.versionDDragon,
+      this.gameParticipants
+    );
+    this.matchSecondaryRune = await this.getSecondaryRune(
       this.versionDDragon,
       this.gameParticipants
     );
