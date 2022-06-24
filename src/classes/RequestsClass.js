@@ -47,7 +47,7 @@ export default class RequestsClass {
 
   async allMatchs(pSummonerPUUID) {
     const request = await axios.get(
-      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${pSummonerPUUID}/ids?api_key=${this.apiKey}&start=0&count=3`,
+      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${pSummonerPUUID}/ids?api_key=${this.apiKey}&start=0&count=4`,
       this.config
     );
     return request.data;
