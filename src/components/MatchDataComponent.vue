@@ -102,9 +102,12 @@
                         this.matchPlayerScore[2]
                       }}</span>
                     </div>
-                    <div class="stats">
+                    <div v-if="this.matchPlayerRatio !== 0" class="stats">
                       <span class="fw-bold">{{ this.matchPlayerRatio }}</span>
                       KDA
+                    </div>
+                    <div v-else class="stats">
+                      <span class="fw-bold text-warning">Perfect</span> KDA
                     </div>
                   </div>
                 </div>

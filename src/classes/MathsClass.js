@@ -40,9 +40,13 @@ export default class MathsClass {
   }
 
   calcPlayerRatio(pNumberKills, pNumberDeaths, pNumberAssists) {
-    const result =
-      (parseInt(pNumberKills, 10) + parseInt(pNumberAssists, 10)) /
-      parseInt(pNumberDeaths, 10);
-    return result.toFixed(2);
+    if (parseInt(pNumberDeaths, 10) !== 0) {
+      const result =
+        (parseInt(pNumberKills, 10) + parseInt(pNumberAssists, 10)) /
+        parseInt(pNumberDeaths, 10);
+      return result.toFixed(2);
+    } else {
+      return 0;
+    }
   }
 }
