@@ -71,6 +71,11 @@
                         "
                         :alt="this.matchPrimaryRune[0]"
                         class="img-rune"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
                       />
                     </div>
                     <div class="rune">
@@ -81,6 +86,11 @@
                         "
                         :alt="this.matchSecondaryRune[0]"
                         class="img-rune"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
                       />
                     </div>
                   </div>
@@ -115,7 +125,11 @@
               <div class="col-4 text-end">
                 <div class="group-three">
                   <div class="group-items me-2">
-                    <div class="item">
+                    <!-- ### First Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerFirstItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -127,7 +141,21 @@
                         class="img-item"
                       />
                     </div>
-                    <div class="item">
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
+                    </div>
+                    <!-- ### Second Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerSecondItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -139,9 +167,23 @@
                         class="img-item"
                       />
                     </div>
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
+                    </div>
                   </div>
                   <div class="group-items me-2">
-                    <div class="item">
+                    <!-- ### Third Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerThirdItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -153,7 +195,21 @@
                         class="img-item"
                       />
                     </div>
-                    <div class="item">
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
+                    </div>
+                    <!-- ### Fourth Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerFourthItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -165,9 +221,23 @@
                         class="img-item"
                       />
                     </div>
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
+                    </div>
                   </div>
                   <div class="group-items me-2">
-                    <div class="item">
+                    <!-- ### Fifth Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerFifthItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -179,7 +249,21 @@
                         class="img-item"
                       />
                     </div>
-                    <div class="item">
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
+                    </div>
+                    <!-- ### Sixt Champion Item ### -->
+                    <div
+                      v-if="this.matchPlayerSixthItems.length !== 0"
+                      class="item"
+                    >
                       <img
                         :src="
                           'https://ddragon.leagueoflegends.com/cdn/' +
@@ -190,6 +274,16 @@
                         :alt="this.matchPlayerSixthItems[1]"
                         class="img-item"
                       />
+                    </div>
+                    <div v-else class="item">
+                      <div
+                        class="no-item"
+                        :class="
+                          this.matchPlayerIsWin
+                            ? 'background-img-win'
+                            : 'background-img-loose'
+                        "
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -327,74 +421,86 @@ export default {
       );
     },
     async getMatchFirstItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item0 !== 0 && parseInt(itemData[0]) === value.item0) {
-              return [value.item0, itemData[1].name, itemData[1].image.full];
+              table = [value.item0, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
     async getMatchSecondItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item1 !== 0 && parseInt(itemData[0]) === value.item1) {
-              return [value.item1, itemData[1].name, itemData[1].image.full];
+              table = [value.item1, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
     async getMatchThirdItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item2 !== 0 && parseInt(itemData[0]) === value.item2) {
-              return [value.item2, itemData[1].name, itemData[1].image.full];
+              table = [value.item2, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
     async getMatchFourthItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item3 !== 0 && parseInt(itemData[0]) === value.item3) {
-              return [value.item3, itemData[1].name, itemData[1].image.full];
+              table = [value.item3, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
     async getMatchFifthItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item4 !== 0 && parseInt(itemData[0]) === value.item4) {
-              return [value.item4, itemData[1].name, itemData[1].image.full];
+              table = [value.item4, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
     async getMatchSixthItem(pVersionDDRagon, pGameParticipants) {
+      let table = [];
       for (const value of pGameParticipants) {
         if (value.summonerName === "Sn0W3838") {
           const result = await request.allItems(pVersionDDRagon);
           for (let itemData of Object.entries(result)) {
             if (value.item5 !== 0 && parseInt(itemData[0]) === value.item5) {
-              return [value.item5, itemData[1].name, itemData[1].image.full];
+              table = [value.item5, itemData[1].name, itemData[1].image.full];
             }
           }
+          return table;
         }
       }
     },
@@ -468,13 +574,13 @@ export default {
 
 <style lang="scss" scoped>
 .is-win {
-  background: #98c2ff
+  background: #468ffc
     linear-gradient(0deg, rgba(50, 115, 250, 0.2), rgba(50, 115, 250, 0.2));
   color: white;
   border-color: #4250d1;
 }
 .is-loose {
-  background: #f08080
+  background: #c84d4d
     linear-gradient(0deg, rgba(50, 115, 250, 0.2), rgba(50, 115, 250, 0.2));
   color: white;
 }
@@ -491,16 +597,27 @@ export default {
   .group-summoners-spells {
     .summoner-spell {
       .img-summoner-spell {
-        width: 1.1rem;
-        height: 1.1rem;
+        vertical-align: baseline;
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
   }
   .group-runes {
     .rune {
       .img-rune {
-        width: 1.2rem;
-        height: 1.2rem;
+        vertical-align: baseline;
+        border-radius: 10%;
+        padding: 2px;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+      .background-img-win {
+        background-color: #4250d1;
+        border-color: #468ffc;
+      }
+      .background-img-loose {
+        background-color: #872a4b;
       }
     }
   }
@@ -510,8 +627,21 @@ export default {
   .group-items {
     .item {
       .img-item {
+        vertical-align: baseline;
         width: 1.5rem;
         height: 1.5rem;
+      }
+      .no-item {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-bottom: 6px;
+      }
+      .background-img-win {
+        background-color: #4250d1;
+        border-color: #468ffc;
+      }
+      .background-img-loose {
+        background-color: #872a4b;
       }
     }
   }
