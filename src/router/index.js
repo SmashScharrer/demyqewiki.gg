@@ -11,7 +11,7 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/overview/:summonerName",
+    path: "/overview/summoner/:summonerName",
     name: "overview",
     component: OverviewView,
   },

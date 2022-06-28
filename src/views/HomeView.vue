@@ -10,8 +10,11 @@
             </div>
             <div class="subtitle">
               <p class="fs-4 fst-italic text-center">
-                Sniping <strong>{{ this.summonerName }}</strong> has never been
-                so easy
+                Sniping
+                <strong>{{
+                  this.getRandomSummoner(this.listSummonersName)
+                }}</strong>
+                has never been so easy
               </p>
             </div>
           </div>
@@ -55,17 +58,23 @@
           <div class="group-table-profiles">
             <div class="table-profiles">
               <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-primary">
+                  <thead>
+                    <tr>
+                      <th scope="col">Rank</th>
+                      <th scope="col">Summoner</th>
+                    </tr>
+                  </thead>
                   <tbody>
-                    <tr v-for="item in listSummonersName" v-bind:key="item">
+                    <tr v-for="item in listSummonersName" v-bind:key="item.id">
                       <th scope="row">RANK</th>
                       <td>
                         <router-link
                           :to="{
                             name: 'overview',
-                            params: { summonerName: item },
+                            params: { summonerName: item.name },
                           }"
-                          >{{ item }}</router-link
+                          >{{ item.name }}</router-link
                         >
                       </td>
                     </tr>
@@ -85,25 +94,47 @@ export default {
   name: "HomeView",
   data() {
     return {
-      summonerName: "",
       listSummonersName: [
-        "Demyqewiki",
-        "PeeIsInBalls",
-        "Mathiii",
-        "clifligo",
-        "Sn0W3838",
+        {
+          id: 1,
+          name: "Demyqewiki",
+          rank: "",
+          icone: "",
+        },
+        {
+          id: 2,
+          name: "PeeIsInBalls",
+          rank: "",
+          icone: "",
+        },
+        {
+          id: 3,
+          name: "Mathiii",
+          rank: "",
+          icone: "",
+        },
+        {
+          id: 4,
+          name: "clifligo",
+          rank: "",
+          icone: "",
+        },
+        {
+          id: 5,
+          name: "Sn0W3838",
+          rank: "",
+          icone: "",
+        },
       ],
     };
   },
   methods: {
     getRandomSummoner(pArraySummoners) {
       const index = Math.floor(Math.random() * pArraySummoners.length);
-      return pArraySummoners[index];
+      return pArraySummoners[index].name;
     },
   },
-  mounted() {
-    this.summonerName = this.getRandomSummoner(this.listSummonersName);
-  },
+  mounted() {},
 };
 </script>
 
@@ -119,7 +150,7 @@ a {
 }
 img {
   border-radius: 50%;
-  width: 5em;
-  height: 5em;
+  width: 3.5em;
+  height: 3.5em;
 }
 </style>
