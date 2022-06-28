@@ -1,14 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView";
+import OverviewView from "../views/OverviewView";
 import MasteriesView from "../views/MasteriesView";
 import MatchHistoryiew from "../views/MatchHistoryView";
-import AboutView from "../views/AboutView";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/overview/:summonerName",
+    name: "overview",
+    component: OverviewView,
   },
   {
     path: "/history",
@@ -19,11 +24,6 @@ const routes = [
     path: "/masteries",
     name: "masteries",
     component: MasteriesView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: AboutView,
   },
 ];
 
