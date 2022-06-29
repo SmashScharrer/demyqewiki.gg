@@ -62,7 +62,13 @@
                 alt="Icon profile"
                 class="me-2"
               />
-              {{ this.listSummonersName[0].name }}
+              <router-link
+                :to="{
+                  name: 'overview',
+                  params: { summonerName: this.listSummonersName[0].name },
+                }"
+                >{{ this.listSummonersName[0].name }}</router-link
+              >
             </div>
           </div>
         </div>
@@ -74,7 +80,13 @@
                 alt="Icon profile"
                 class="me-2"
               />
-              {{ this.listSummonersName[1].name }}
+              <router-link
+                :to="{
+                  name: 'overview',
+                  params: { summonerName: this.listSummonersName[1].name },
+                }"
+                >{{ this.listSummonersName[1].name }}</router-link
+              >
             </div>
           </div>
         </div>
@@ -86,7 +98,13 @@
                 alt="Icon profile"
                 class="me-2"
               />
-              {{ this.listSummonersName[2].name }}
+              <router-link
+                :to="{
+                  name: 'overview',
+                  params: { summonerName: this.listSummonersName[2].name },
+                }"
+                >{{ this.listSummonersName[2].name }}</router-link
+              >
             </div>
           </div>
         </div>
@@ -100,7 +118,13 @@
                 alt="Icon profile"
                 class="me-2"
               />
-              {{ this.listSummonersName[3].name }}
+              <router-link
+                :to="{
+                  name: 'overview',
+                  params: { summonerName: this.listSummonersName[3].name },
+                }"
+                >{{ this.listSummonersName[3].name }}</router-link
+              >
             </div>
           </div>
         </div>
