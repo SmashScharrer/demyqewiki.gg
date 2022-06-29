@@ -2,6 +2,7 @@ import axios from "axios";
 
 export default class RequestsClass {
   constructor(pApiKey) {
+    this.host = "https://demyqewiki-api.herokuapp.com";
     this.hostDDragon = "https://ddragon.leagueoflegends.com";
     this.hostAPI = "https://euw1.api.riotgames.com";
     this.apiKey = pApiKey;
@@ -10,6 +11,66 @@ export default class RequestsClass {
       "Access-Control-Allow-Origin": "*",
     };
   }
+
+  /* # Summoner requests # */
+  get summoner() {
+    return {
+      accountBySummonerName: async (pSummonerName) => {
+        const request = await axios.get(
+          this.host + "/league/" + pSummonerName,
+          this.config
+        );
+        return request.data;
+      },
+    };
+  }
+
+  get league() {
+    return {
+      leagueRankBySummonerId: async (pSummonerName) => {
+        const request = await axios.get(
+          `${this.host}/league/${pSummonerName}`,
+          this.config
+        );
+        return request.data;
+      },
+    };
+  }
+
+  get icons() {
+    return {
+      allIconsSummonerProfile: async () => {
+        const request = await axios.get(
+          `${this.host}/icons-profile`,
+          this.config
+        );
+        return request.data;
+      },
+      iconeSummonerProfileBySummonerName: async (pSummonerName) => {
+        const request = await axios.get(
+          this.host + `/icon-profile/${pSummonerName}`
+        );
+        return request.data;
+      },
+    };
+  }
+
+  // Request v2 soon
+  // get version() {
+  //   return {
+  //     lastest: async () => {
+  //       const request = await axios.get(
+  //         this.host + "/version/lastest",
+  //         this.config
+  //       );
+  //       return request.data;
+  //     },
+  //     all: async () => {
+  //       const request = await axios.get("/versions", this.config);
+  //       return request.data;
+  //     },
+  //   };
+  // }
 
   async latestVersion() {
     const request = await axios.get(

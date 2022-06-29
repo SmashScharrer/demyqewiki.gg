@@ -12,7 +12,7 @@
               <p class="fs-4 fst-italic text-center">
                 Sniping
                 <strong>{{
-                  this.getRandomSummoner(this.listSummonersName)
+                  this.generateRandomSummoner(this.listSummonersName)
                 }}</strong>
                 has never been so easy
               </p>
@@ -22,7 +22,7 @@
       </div>
       <!-- Search summoner bar -->
       <div class="row d-flex justify-content-center">
-        <div class="col-8">
+        <div class="col-xxl-8 col-xl-8 col-10">
           <div class="group-search">
             <div class="input-search">
               <div class="mb-3">
@@ -52,35 +52,73 @@
           </div>
         </div>
       </div>
-      <!-- Table viewed profiles -->
+      <!-- Suggest profiles -->
+      <div class="row mb-3">
+        <div class="col-xxl-4 col-xl-4 col-12">
+          <div class="group-suggest-profiles p-3 mb-3">
+            <div class="suggest-profile">
+              <img
+                :src="this.listSummonersName[0].iconProfile"
+                alt="Icon profile"
+                class="me-2"
+              />
+              {{ this.listSummonersName[0].name }}
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-4 col-12">
+          <div class="group-suggest-profiles p-3 mb-3">
+            <div class="suggest-profile">
+              <img
+                :src="this.listSummonersName[1].iconProfile"
+                alt="Icon profile"
+                class="me-2"
+              />
+              {{ this.listSummonersName[1].name }}
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-4 col-12">
+          <div class="group-suggest-profiles p-3 mb-3">
+            <div class="suggest-profile">
+              <img
+                :src="this.listSummonersName[2].iconProfile"
+                alt="Icon profile"
+                class="me-2"
+              />
+              {{ this.listSummonersName[2].name }}
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row d-flex justify-content-center">
-        <div class="col-12 col-xl-8">
-          <div class="group-table-profiles">
-            <div class="table-profiles">
-              <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                  <thead>
-                    <tr>
-                      <th scope="col">Rank</th>
-                      <th scope="col">Summoner</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in listSummonersName" v-bind:key="item.id">
-                      <th scope="row">RANK</th>
-                      <td>
-                        <router-link
-                          :to="{
-                            name: 'overview',
-                            params: { summonerName: item.name },
-                          }"
-                          >{{ item.name }}</router-link
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+        <div class="col-xxl-4 col-xl-4 col-12">
+          <div class="group-suggest-profiles p-3 mb-3">
+            <div class="suggest-profile">
+              <img
+                :src="this.listSummonersName[3].iconProfile"
+                alt="Icon profile"
+                class="me-2"
+              />
+              {{ this.listSummonersName[3].name }}
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-4 col-12">
+          <div class="group-suggest-profiles p-3 mb-3">
+            <div class="suggest-profile">
+              <img
+                :src="this.listSummonersName[4].iconProfile"
+                alt="Icon profile"
+                class="me-2"
+              />
+              <router-link
+                :to="{
+                  name: 'overview',
+                  params: { summonerName: this.listSummonersName[4].name },
+                }"
+                >{{ this.listSummonersName[4].name }}</router-link
+              >
             </div>
           </div>
         </div>
@@ -90,6 +128,10 @@
 </template>
 
 <script>
+import RequestsClass from "@/classes/RequestsClass";
+
+const request = new RequestsClass(process.env.VUE_APP_API_KEY);
+
 export default {
   name: "HomeView",
   data() {
@@ -98,55 +140,57 @@ export default {
         {
           id: 1,
           name: "Demyqewiki",
-          rank: "",
-          icone: "",
+          iconProfile: "",
         },
         {
           id: 2,
           name: "PeeIsInBalls",
-          rank: "",
-          icone: "",
+          iconProfile: "",
         },
         {
           id: 3,
           name: "Mathiii",
-          rank: "",
-          icone: "",
+          iconProfile: "",
         },
         {
           id: 4,
           name: "clifligo",
-          rank: "",
-          icone: "",
+          iconProfile: "",
         },
         {
           id: 5,
           name: "Sn0W3838",
-          rank: "",
-          icone: "",
+          iconProfile: "",
         },
       ],
     };
   },
   methods: {
-    getRandomSummoner(pArraySummoners) {
+    generateRandomSummoner(pArraySummoners) {
       const index = Math.floor(Math.random() * pArraySummoners.length);
       return pArraySummoners[index].name;
     },
   },
-  mounted() {},
+  async mounted() {
+    for (let index = 0; index < this.listSummonersName.length; index++) {
+      this.listSummonersName[index].iconProfile =
+        await request.icons.iconeSummonerProfileBySummonerName(
+          this.listSummonersName[index].name
+        );
+    }
+  },
 };
 </script>
 
 <style scoped>
-.table th {
-  text-align: center;
-}
-.table td {
-  text-align: center;
+.group-suggest-profiles {
+  background-color: #d0d3d4;
+  border: solid black 1px;
+  border-radius: 15px;
 }
 a {
   text-decoration: none;
+  color: black;
 }
 img {
   border-radius: 50%;
