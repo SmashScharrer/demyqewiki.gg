@@ -3,7 +3,7 @@
   <div class="navbar-component">
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Demyqewiki.gg</span>
+        <router-link to="/" class="navbar-brand">Demyqewiki.gg</router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -15,24 +15,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link to="/" class="nav-link">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/history" class="nav-link">History</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/masteries" class="nav-link"
-                >Masteries</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link to="/about" class="nav-link">About</router-link>
-            </li>
-          </ul>
-        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
       </div>
     </nav>
   </div>

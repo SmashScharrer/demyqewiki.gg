@@ -11,18 +11,18 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/overview/summoner/:summonerName",
+    path: "/overview/:summonerName",
     name: "overview",
     component: OverviewView,
   },
   {
-    path: "/history",
+    path: "/history/:summonerName",
     name: "history",
     component: MatchHistoryiew,
   },
   {
-    path: "/masteries",
-    name: "masteries",
+    path: "/mastery/:summonerName",
+    name: "mastery",
     component: MasteriesView,
   },
 ];

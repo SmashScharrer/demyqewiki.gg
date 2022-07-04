@@ -12,12 +12,29 @@ export default class RequestsClass {
     };
   }
 
+  /* # Version requests # */
+  get version() {
+    return {
+      lastest: async () => {
+        const request = await axios.get(
+          `${this.host}/version/lastest`,
+          this.config
+        );
+        return request.data;
+      },
+      all: async () => {
+        const request = await axios.get(`${this.host}/versions`, this.config);
+        return request.data;
+      },
+    };
+  }
+
   /* # Summoner requests # */
   get summoner() {
     return {
       accountBySummonerName: async (pSummonerName) => {
         const request = await axios.get(
-          this.host + "/league/" + pSummonerName,
+          `${this.host}/summoner/${pSummonerName}`,
           this.config
         );
         return request.data;
@@ -25,11 +42,17 @@ export default class RequestsClass {
     };
   }
 
-  get league() {
+  /* # Champion requests # */
+  get champion() {
+    return {};
+  }
+
+  /* # Champion mastery requests # */
+  get mastery() {
     return {
-      leagueRankBySummonerId: async (pSummonerName) => {
+      allMasteriesBySummonerName: async (pSummonerName) => {
         const request = await axios.get(
-          `${this.host}/league/${pSummonerName}`,
+          `${this.host}/champion-masteries/${pSummonerName}`,
           this.config
         );
         return request.data;
@@ -37,40 +60,37 @@ export default class RequestsClass {
     };
   }
 
-  get icons() {
-    return {
-      allIconsSummonerProfile: async () => {
-        const request = await axios.get(
-          `${this.host}/icons-profile`,
-          this.config
-        );
-        return request.data;
-      },
-      iconeSummonerProfileBySummonerName: async (pSummonerName) => {
-        const request = await axios.get(
-          this.host + `/icon-profile/${pSummonerName}`
-        );
-        return request.data;
-      },
-    };
-  }
-
-  // Request v2 soon
-  // get version() {
+  // get league() {
   //   return {
-  //     lastest: async () => {
+  //     leagueRankBySummonerId: async (pSummonerName) => {
   //       const request = await axios.get(
-  //         this.host + "/version/lastest",
+  //         `${this.host}/league/${pSummonerName}`,
   //         this.config
   //       );
   //       return request.data;
   //     },
-  //     all: async () => {
-  //       const request = await axios.get("/versions", this.config);
+  //   };
+  // }
+
+  // get icons() {
+  //   return {
+  //     allIconsSummonerProfile: async () => {
+  //       const request = await axios.get(
+  //         `${this.host}/icons-profile`,
+  //         this.config
+  //       );
+  //       return request.data;
+  //     },
+  //     iconeSummonerProfileBySummonerName: async (pSummonerName) => {
+  //       const request = await axios.get(
+  //         this.host + `/icon-profile/${pSummonerName}`
+  //       );
   //       return request.data;
   //     },
   //   };
   // }
+
+  // Request v2 soon
 
   async latestVersion() {
     const request = await axios.get(

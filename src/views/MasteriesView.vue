@@ -1,29 +1,64 @@
 <template>
+  <!-- NavBar -->
+  <NavBar />
+  <!-- Main -->
   <div class="masteries">
     <div class="container">
-      <div class="row">
+      <!-- Title -->
+      <div class="row m-2">
         <div class="col-12">
-          <h1 class="h1 text-center">Champions Masteries</h1>
+          <h1 class="h1 text-center">Champions Mastery</h1>
         </div>
       </div>
+      <!-- Subtitle -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="group-subtitle-summoner">
+            <h2 class="h2">{{ this.summoner.name }} - EUW</h2>
+          </div>
+        </div>
+      </div>
+      <!-- Search bar -->
+      <div class="row d-flex justify-content-start mb-1">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputEmail1"
+              placeholder="Search a champion..."
+              aria-describedby="emailHelp"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Table -->
       <div class="row">
-        <div
-          v-for="item in listDataCard"
-          v-bind:key="item.key"
-          class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12"
-        >
-          <CardChampionMastery
-            :id-champion="item.key"
-            :name-champion="item.name"
-            :asset-champion="item.asset"
-            :points-champion="item.points"
-            :points-min-level-champion="item.pointsLastLevel"
-            :points-max-level-champion="item.pointsNextLevel"
-            :pourcent-level-champion="item.pourcentLevel"
-            :level-champion="item.level"
-            :tokens-earned-champion="item.tokensEarned"
-            :is-chest-granted-champion="item.chestGranted"
-          />
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+              <thead class="table-info">
+                <tr>
+                  <th scope="col" class="text-center">Champion</th>
+                  <th scope="col" class="text-center">Level</th>
+                  <th scope="col" class="text-center">Points</th>
+                  <th scope="col" class="text-center">Last time</th>
+                  <th scope="col" class="text-center">Progress</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in listChampionsMastery" v-bind:key="item.id">
+                  <th scope="row" class="text-center">{{ item.id }}</th>
+                  <td class="text-center">{{ item.level }}</td>
+                  <td class="text-center">{{ item.points }}</td>
+                  <td class="text-center">{{ item.lastPlay }}</td>
+                  <td class="text-center">
+                    <div v-if="item.level === 7">Mastered</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -31,104 +66,56 @@
 </template>
 
 <script>
+import { useRoute } from "vue-router";
+import NavBar from "@/components/NavBar";
 import RequestsClass from "@/classes/RequestsClass";
-import MathsClass from "@/classes/MathsClass";
-import CardChampionMastery from "@/components/CardChampionMastery";
 
 const request = new RequestsClass(process.env.VUE_APP_API_KEY);
-const maths = new MathsClass();
 
 export default {
   name: "MasteriesView",
   components: {
-    CardChampionMastery,
+    NavBar,
+  },
+  setup() {
+    const route = useRoute();
+    return {
+      route,
+    };
   },
   data() {
     return {
       version: "",
-      listChampions: [],
-      listChampionsMasteries: [],
-      listDataCard: [],
+      summoner: [],
+      listChampionsMastery: [],
     };
   },
   methods: {
-    async getLatestVersion() {
-      return await request.latestVersion();
+    async getSummonerData(pSummonerName) {
+      return await request.summoner.accountBySummonerName(pSummonerName);
     },
-    async getAllChampions(pVersion) {
+    async getSummonerMastery(pSummonerName) {
       let table = [];
-      const result = await request.allChampions(pVersion);
-      Object.entries(result).forEach((champion) => {
+      const result = await request.mastery.allMasteriesBySummonerName(
+        pSummonerName
+      );
+      for (let index = 0; index < result.length; index++) {
         table.push({
-          id: champion[1].id,
-          key: parseInt(champion[1].key),
-          name: champion[1].name,
-          asset: champion[1].image,
-        });
-      });
-      return table;
-    },
-    async getChampionsMasteries(pSummoner) {
-      let table = [];
-      const result = await request.allChampionsMasteries(pSummoner);
-      Object.entries(result).forEach((champion) => {
-        table.push({
-          key: parseInt(champion[1].championId),
-          level: champion[1].championLevel,
-          points: champion[1].championPoints,
-          pointsSinceLastLevel: maths.calcMinPoints(
-            champion[1].championPoints,
-            champion[1].championPointsSinceNextLevel
+          id: result[index].championId,
+          level: result[index].championLevel,
+          points: result[index].championPoints,
+          lastPlay: new Date(result[index].lastPlayTime).toLocaleDateString(
+            "en-GB"
           ),
-          pointsUntilNextLevel: maths.calcMaxPoints(
-            champion[1].championPoints,
-            champion[1].championPointsUntilNextLevel
-          ),
-          pourcentLevel: maths.calcPourcentLevel(
-            champion[1].championPoints,
-            champion[1].championPointsUntilNextLevel
-          ),
-          lastPlayTime: champion[1].lastPlayTime,
-          chestGranted: champion[1].chestGranted,
-          tokensEarned: champion[1].tokensEarned,
         });
-      });
-      return table;
-    },
-    getCardChampionData(pTableChampions, pTableChampionsMasteries) {
-      let table = [];
-      pTableChampionsMasteries.forEach((championMasterie) => {
-        pTableChampions.forEach((champion) => {
-          if (champion.key === championMasterie.key) {
-            table.push({
-              key: champion.key,
-              id: champion.id,
-              name: champion.name,
-              asset: `https://ddragon.leagueoflegends.com/cdn/${this.version}/img/champion/${champion.id}.png`,
-              level: championMasterie.level,
-              points: championMasterie.points,
-              pointsLastLevel: championMasterie.pointsSinceLastLevel,
-              pointsNextLevel: championMasterie.pointsUntilNextLevel,
-              pourcentLevel: championMasterie.pourcentLevel,
-              lastPlay: championMasterie.lastPlayTime,
-              chestGranted: championMasterie.chestGranted,
-              tokensEarned: championMasterie.tokensEarned,
-            });
-          }
-        });
-      });
+      }
       return table;
     },
   },
   async mounted() {
-    this.version = await this.getLatestVersion();
-    this.listChampions = await this.getAllChampions(this.version);
-    this.listChampionsMasteries = await this.getChampionsMasteries(
-      process.env.VUE_APP_SUMMONER_ID
-    );
-    this.listDataCard = this.getCardChampionData(
-      this.listChampions,
-      this.listChampionsMasteries
+    this.summoner = await this.getSummonerData(this.route.params.summonerName);
+    this.listChampionsMastery = await this.getSummonerMastery(
+      this.route.params.summonerName
     );
   },
 };
