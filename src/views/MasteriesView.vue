@@ -11,10 +11,16 @@
         </div>
       </div>
       <!-- Subtitle -->
-      <div class="row mb-3">
+      <div class="row mb-2">
         <div class="col-12">
           <div class="group-subtitle-summoner">
-            <h2 class="h2">{{ this.summoner.name }} - EUW</h2>
+            <p class="fs-3">
+              <img
+                :src="this.iconProfile"
+                alt="Icon summoner profile"
+                class="me-2"
+              />{{ this.summoner.name }} - EUW
+            </p>
           </div>
         </div>
       </div>
@@ -25,9 +31,10 @@
             <input
               type="text"
               class="form-control"
-              id="exampleInputEmail1"
+              id="inputTextSearchChampionMastery"
               placeholder="Search a champion..."
-              aria-describedby="emailHelp"
+              aria-describedby="searchChampionMastery"
+              disabled
             />
           </div>
         </div>
@@ -48,7 +55,7 @@
               </thead>
               <tbody>
                 <tr v-for="item in listChampionsMastery" v-bind:key="item.id">
-                  <th scope="row" class="text-center">{{ item.id }}</th>
+                  <th scope="row" class="text-center">{{ item.name }}</th>
                   <td class="text-center">{{ item.level }}</td>
                   <td class="text-center">{{ item.points }}</td>
                   <td class="text-center">{{ item.lastPlay }}</td>
@@ -79,14 +86,18 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const summonerName = route.params.summonerName;
     return {
       route,
+      summonerName,
     };
   },
   data() {
     return {
       version: "",
+      iconProfile: "",
       summoner: [],
+      listChampions: [],
       listChampionsMastery: [],
     };
   },
@@ -94,31 +105,49 @@ export default {
     async getSummonerData(pSummonerName) {
       return await request.summoner.accountBySummonerName(pSummonerName);
     },
+    async getSummonerIcon(pSummonerName) {
+      return await request.icon.iconProfileBySummonerName(pSummonerName);
+    },
+    async getChampionsData() {
+      return await request.champion.all();
+    },
     async getSummonerMastery(pSummonerName) {
       let table = [];
-      const result = await request.mastery.allMasteriesBySummonerName(
-        pSummonerName
-      );
+      const result = await request.mastery.all(pSummonerName);
       for (let index = 0; index < result.length; index++) {
-        table.push({
-          id: result[index].championId,
-          level: result[index].championLevel,
-          points: result[index].championPoints,
-          lastPlay: new Date(result[index].lastPlayTime).toLocaleDateString(
-            "en-GB"
-          ),
+        Object.entries(this.listChampions).forEach((champion) => {
+          if (
+            parseInt(champion[1].key) === parseInt(result[index].championId)
+          ) {
+            table.push({
+              id: result[index].championId,
+              name: champion[1].name,
+              level: result[index].championLevel,
+              points: result[index].championPoints,
+              lastPlay: new Date(result[index].lastPlayTime).toLocaleDateString(
+                "en-GB"
+              ),
+            });
+          }
         });
       }
       return table;
     },
   },
   async mounted() {
-    this.summoner = await this.getSummonerData(this.route.params.summonerName);
+    this.summoner = await this.getSummonerData(this.summonerName);
+    this.iconProfile = await this.getSummonerIcon(this.summonerName);
+    this.listChampions = await this.getChampionsData();
     this.listChampionsMastery = await this.getSummonerMastery(
-      this.route.params.summonerName
+      this.summonerName
     );
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.group-subtitle-summoner img {
+  width: 2.5em;
+  height: 2.5em;
+}
+</style>

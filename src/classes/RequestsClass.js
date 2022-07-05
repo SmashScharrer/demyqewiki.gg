@@ -44,15 +44,40 @@ export default class RequestsClass {
 
   /* # Champion requests # */
   get champion() {
-    return {};
+    return {
+      all: async () => {
+        const request = await axios.get(`${this.host}/champions`, this.config);
+        return request.data;
+      },
+    };
   }
 
   /* # Champion mastery requests # */
   get mastery() {
     return {
-      allMasteriesBySummonerName: async (pSummonerName) => {
+      all: async (pSummonerName) => {
         const request = await axios.get(
           `${this.host}/champion-masteries/${pSummonerName}`,
+          this.config
+        );
+        return request.data;
+      },
+    };
+  }
+
+  /* # Icon summoner profile # */
+  get icon() {
+    return {
+      all: async () => {
+        const request = await axios.get(
+          `${this.host}/icon-profile`,
+          this.config
+        );
+        return request.data;
+      },
+      iconProfileBySummonerName: async (pSummonerName) => {
+        const request = await axios.get(
+          `${this.host}/icon-profile/${pSummonerName}`,
           this.config
         );
         return request.data;
@@ -72,58 +97,12 @@ export default class RequestsClass {
   //   };
   // }
 
-  // get icons() {
-  //   return {
-  //     allIconsSummonerProfile: async () => {
-  //       const request = await axios.get(
-  //         `${this.host}/icons-profile`,
-  //         this.config
-  //       );
-  //       return request.data;
-  //     },
-  //     iconeSummonerProfileBySummonerName: async (pSummonerName) => {
-  //       const request = await axios.get(
-  //         this.host + `/icon-profile/${pSummonerName}`
-  //       );
-  //       return request.data;
-  //     },
-  //   };
-  // }
-
-  // Request v2 soon
-
   async latestVersion() {
     const request = await axios.get(
       this.hostDDragon + "/api/versions.json",
       this.config
     );
     return request.data[0];
-  }
-
-  async allChampions(pVersion) {
-    const request = await axios.get(
-      this.hostDDragon + `/cdn/${pVersion}/data/fr_FR/champion.json`,
-      this.config
-    );
-    return request.data.data;
-  }
-
-  async allChampionsMasteries(pSummoner) {
-    const request = await axios.get(
-      this.hostAPI +
-        `/lol/champion-mastery/v4/champion-masteries/by-summoner/${pSummoner}?api_key=${this.apiKey}`,
-      this.config
-    );
-    return request.data;
-  }
-
-  async summonerAccount() {
-    const request = await axios.get(
-      this.hostAPI +
-        `/lol/summoner/v4/summoners/by-name/Sn0W3838?api_key=${this.apiKey}`,
-      this.config
-    );
-    return request.data;
   }
 
   async allMatchs(pSummonerPUUID) {
