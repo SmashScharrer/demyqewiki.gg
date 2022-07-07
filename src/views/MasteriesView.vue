@@ -29,12 +29,12 @@
         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
           <div class="mb-3">
             <input
+              v-model="searchChampion"
               type="text"
               class="form-control"
               id="inputTextSearchChampionMastery"
-              placeholder="Search a champion..."
+              placeholder="Search a champion by name..."
               aria-describedby="searchChampionMastery"
-              disabled
             />
           </div>
         </div>
@@ -55,7 +55,10 @@
               </thead>
               <tbody>
                 <!-- Table : ROW Champion Mastery -->
-                <tr v-for="item in listChampionsMastery" v-bind:key="item.id">
+                <tr
+                  v-for="item in filteredListChampionMastery"
+                  v-bind:key="item.id"
+                >
                   <!-- Table : COL Champion Name -->
                   <th scope="row" class="text-center">{{ item.name }}</th>
                   <!-- Table : COL Champion Level -->
@@ -250,6 +253,7 @@ export default {
       version: "",
       iconProfile: "",
       summoner: [],
+      searchChampion: "",
       listChampions: [],
       listChampionsMastery: [],
     };
@@ -290,6 +294,15 @@ export default {
         });
       }
       return table;
+    },
+  },
+  computed: {
+    filteredListChampionMastery() {
+      return this.listChampionsMastery.filter((mastery) => {
+        return mastery.name
+          .toLowerCase()
+          .includes(this.searchChampion.toLowerCase());
+      });
     },
   },
   async mounted() {
